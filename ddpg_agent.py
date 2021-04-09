@@ -22,17 +22,21 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 class Agent():
     """Interacts with and learns from the environment."""
     
-    def __init__(self, state_size, action_size, random_seed):
+    def __init__(self, state_size, action_size,num_agents,random_seed):
         """Initialize an Agent object.
         
         Params
         ======
             state_size (int): dimension of each state
             action_size (int): dimension of each action
+            num_agents (int) : number of Agents
             random_seed (int): random seed
         """
         self.state_size = state_size
         self.action_size = action_size
+        self.num_agents = num_agents # to account for multiple interacting agents
+        
+        
         self.seed = random.seed(random_seed)
 
         # Actor Network (w/ Target Network)
@@ -53,8 +57,11 @@ class Agent():
     
     def step(self, state, action, reward, next_state, done):
         """Save experience in replay memory, and use random sample from buffer to learn."""
-        # Save experience / reward
-        self.memory.add(state, action, reward, next_state, done)
+        
+        # Save experience / reward for all possible agents
+        
+        for i in range(self.num_agents):
+            self.memory.add(state[i], action[i], reward[i], next_state[i], done[i])
 
         # Learn, if enough samples are available in memory
         if len(self.memory) > BATCH_SIZE:
@@ -63,14 +70,25 @@ class Agent():
 
     def act(self, state, add_noise=True):
         """Returns actions for given state as per current policy."""
+        
         state = torch.from_numpy(state).float().to(device)
         self.actor_local.eval()
+        
+        action = np.zeros((self.num_agents, self.action_size))
+        
         with torch.no_grad():
-            action = self.actor_local(state).cpu().data.numpy()
+            
+            #update for all possible actions for all agents
+            for i, s in enumerate(state):
+                action[i,:] = self.actor_local(s).cpu().data.numpy()
+        
         self.actor_local.train()
+        
         if add_noise:
             action += self.noise.sample()
-        action = (action + 1.0) / 2.0
+            
+        #action = (action + 1.0) / 2.0
+        
         return np.clip(action, 0, 1)
 
 
@@ -96,6 +114,12 @@ class Agent():
         actions_next = self.actor_target(next_states)
         Q_targets_next = self.critic_target(next_states, actions_next)
         # Compute Q targets for current states (y_i)
+        
+        #print("actions_next", actions_next.shape)
+        #print("Q_targets_next", Q_targets_next.shape)
+        #print("rewards", rewards.shape)
+        #print("rewards", dones.shape)
+        
         Q_targets = rewards + (gamma * Q_targets_next * (1 - dones))
         # Compute critic loss
         Q_expected = self.critic_local(states, actions)
