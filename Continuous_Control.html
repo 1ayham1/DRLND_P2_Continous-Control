@@ -13397,7 +13397,7 @@ The state for the first agent looks like: [  0.00000000e+00  -4.00000000e+00   0
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total score (averaged over agents) this episode: 0.08149999817833305
+<pre>Total score (averaged over agents) this episode: 0.12599999718368055
 </pre>
 </div>
 </div>
@@ -13485,13 +13485,31 @@ The state for the first agent looks like: [  0.00000000e+00  -4.00000000e+00   0
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>cuda:0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">smart_agent_ddpg</span><span class="p">(</span><span class="n">n_episodes</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">max_t</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">smart_agent_ddpg</span><span class="p">(</span><span class="n">n_episodes</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">max_t</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;Deep Deterministic Policy Gradient (DDPG)</span>
 <span class="sd">    </span>
@@ -13518,9 +13536,10 @@ The state for the first agent looks like: [  0.00000000e+00  -4.00000000e+00   0
         <span class="n">agent</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_t</span><span class="p">):</span>
-            
+        
+        
             <span class="n">actions</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">add_noise</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>    <span class="c1"># Predict the best action for the current state.(for each agent)</span>
-            <span class="n">actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>                  <span class="c1"># all actions between -1 and 1</span>
+            <span class="c1">#actions = np.clip(actions, -1, 1)                  # all actions between -1 and 1</span>
             
             <span class="n">env_info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)[</span><span class="n">brain_name</span><span class="p">]</span>           <span class="c1"># send all actions to tne environment</span>
         
@@ -13541,21 +13560,21 @@ The state for the first agent looks like: [  0.00000000e+00  -4.00000000e+00   0
         <span class="n">scores_window</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>            <span class="c1"># save average attained scores from all agents</span>
         <span class="n">scores_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>              <span class="c1"># save average attained scores from all agents</span>
         
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">Episode </span><span class="si">{}</span><span class="se">\t</span><span class="s1">Average Score: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i_episode</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores_window</span><span class="p">)),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">Episode </span><span class="si">{}</span><span class="se">\t</span><span class="s1">Average Score: </span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i_episode</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores_window</span><span class="p">)),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         
-        <span class="k">if</span> <span class="n">i_episode</span> <span class="o">%</span> <span class="mi">30</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#requirement</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">Episode </span><span class="si">{}</span><span class="se">\t</span><span class="s1">Average Score: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i_episode</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores_window</span><span class="p">)))</span>
-            <span class="c1">#save the model</span>
+        <span class="k">if</span> <span class="n">i_episode</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#requirement</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">Episode </span><span class="si">{}</span><span class="se">\t</span><span class="s1">Average Score: </span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i_episode</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores_window</span><span class="p">)))</span>
+            
             
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores_window</span><span class="p">)</span><span class="o">&gt;=</span><span class="mf">30.0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Environment solved in </span><span class="si">{:d}</span><span class="s1"> episodes!</span><span class="se">\t</span><span class="s1">Average Score: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i_episode</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores_window</span><span class="p">)))</span>
-            
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Environment solved in </span><span class="si">{:d}</span><span class="s1"> episodes!</span><span class="se">\t</span><span class="s1">Average Score: </span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i_episode</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores_window</span><span class="p">)))</span>
+            <span class="c1">#save the model</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">actor_local</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s1">&#39;actor_mdl.pth&#39;</span><span class="p">)</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">critic_local</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s1">&#39;critic_mdl.pth&#39;</span><span class="p">)</span>
             
             <span class="k">break</span>
             
-    <span class="k">return</span> <span class="n">scores</span>
+    <span class="k">return</span> <span class="n">scores_list</span>
 </pre></div>
 
     </div>
@@ -13565,14 +13584,14 @@ The state for the first agent looks like: [  0.00000000e+00  -4.00000000e+00   0
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">scores</span> <span class="o">=</span> <span class="n">smart_agent_ddpg</span><span class="p">()</span>
+<span class="n">scores_list</span> <span class="o">=</span> <span class="n">smart_agent_ddpg</span><span class="p">()</span>
 <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total time mi: &quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total time [min]: &quot;</span><span class="p">,(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13589,13 +13608,100 @@ The state for the first agent looks like: [  0.00000000e+00  -4.00000000e+00   0
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Episode 30	Average Score: 0.08
-Episode 60	Average Score: 0.04
-Episode 90	Average Score: 0.03
-Episode 120	Average Score: 0.00
-Episode 150	Average Score: 0.01
-Episode 151	Average Score: 0.01</pre>
+<pre>Episode 96	Average Score: 30.062
+Environment solved in 96 episodes!	Average Score: 30.062
+</pre>
 </div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-9-d9fe7132fe24&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> t2 <span class="ansi-blue-fg">=</span> time<span class="ansi-blue-fg">.</span>time
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg"> </span>print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;total time [min]: &#34;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">(</span>t2<span class="ansi-blue-fg">-</span>t1<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">/</span><span class="ansi-cyan-fg">60</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">TypeError</span>: unsupported operand type(s) for -: &#39;builtin_function_or_method&#39; and &#39;float&#39;</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total time [min]: &quot;</span><span class="p">,(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>total time [min]:  40.94511096477508
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># plot the scores</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">scores_list</span><span class="p">)),</span> <span class="n">scores_list</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Score&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Episode #&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
 </div>
 
 </div>
@@ -13608,13 +13714,6 @@ Episode 151	Average Score: 0.01</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dd</span>
-<span class="c1"># plot the scores</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)),</span> <span class="n">scores</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Score&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Episode #&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13627,20 +13726,7 @@ Episode 151	Average Score: 0.01</pre>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">kkjklkjl</span>
 </pre></div>
 
     </div>
