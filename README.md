@@ -1,4 +1,3 @@
-[//]: # (Image References)
 
 [image1]: https://user-images.githubusercontent.com/10624937/43851024-320ba930-9aff-11e8-8493-ee547c6af349.gif "Trained Agent"
 [image2]: https://user-images.githubusercontent.com/10624937/43851646-d899bf20-9b00-11e8-858c-29b5c2c94ccc.png "Crawler"
@@ -59,9 +58,12 @@ The environment is considered solved, when the average (over 100 episodes) of th
 
 2. Place the file in the GitHub repository, in the `DRLND_P2_Continous Control/` folder, and unzip (or decompress) the file.
 
-### Instructions
+### Instructions To Run
 
-Follow the instructions in `Continuous_Control.ipynb` to get started with training your own agent!  
+Dependencies, resources, links and further information can be found in the main repository [Udacity DRLND](https://github.com/udacity/deep-reinforcement-learning/tree/master/). Requirements include setting up PyTorch, the ML-Agents toolkit, and a few more Python packages.
+
+After managing all dependencies, please follow the instructions in `Tennis.ipynb`.
+
 
 ### (Optional) Challenge: Crawler Environment
 
