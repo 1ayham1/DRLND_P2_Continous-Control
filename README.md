@@ -62,7 +62,7 @@ The environment is considered solved, when the average (over 100 episodes) of th
 
 Dependencies, resources, links and further information can be found in the main repository [Udacity DRLND](https://github.com/udacity/deep-reinforcement-learning/tree/master/). Requirements include setting up PyTorch, the ML-Agents toolkit, and a few more Python packages.
 
-After managing all dependencies, please follow the instructions in `Tennis.ipynb`.
+After managing all dependencies, please follow the instructions in `Continuous_Control.ipynb`.
 
 
 ### (Optional) Challenge: Crawler Environment
